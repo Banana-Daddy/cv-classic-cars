@@ -81,7 +81,7 @@ tailwind.config = {
   .hair{border-color:rgba(236,234,230,.12);}
 
   .specrow{display:flex;justify-content:space-between;gap:1rem;padding:.7rem 0;border-top:1px solid rgba(236,234,230,.1);font-size:.78rem;}
-  .specrow dt{color:#8A8A86;text-transform:uppercase;letter-spacing:.18em;font-size:.66rem;}
+  .specrow dt{color:#ABA9A3;text-transform:uppercase;letter-spacing:.18em;font-size:.66rem;}
   .specrow dd{text-align:right;}
 
   .plate img{filter:grayscale(.35) brightness(.92) contrast(1.05);transition:filter .7s ease, transform 1.4s ease;}
@@ -93,6 +93,20 @@ tailwind.config = {
 
   .marquee{animation:mq 34s linear infinite;}
   @keyframes mq{to{transform:translateX(-50%)}}
+
+  /* Anchored sections clear the fixed nav */
+  section[id]{scroll-margin-top:5.5rem;}
+
+  /* Keyboard focus — visible on the dark canvas */
+  a:focus-visible,button:focus-visible{outline:2px solid #E0A23C;outline-offset:3px;border-radius:4px;}
+
+  /* Mobile menu */
+  #mobnav{transition:opacity .35s ease, visibility .35s ease;}
+  #mobnav.closed{opacity:0;visibility:hidden;pointer-events:none;}
+  .burger span{transition:transform .3s ease, opacity .2s ease;}
+  .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
 
   @media (prefers-reduced-motion: reduce){
     .js .reveal,.enter{opacity:1!important;transform:none!important;transition:none!important;animation:none!important;}
@@ -106,16 +120,37 @@ tailwind.config = {
 <!-- ░░ NAV ░░ -->
 <header class="fixed inset-x-0 top-0 z-50 px-3 pt-3">
   <div id="navbar" class="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-transparent px-5 py-3 transition-all duration-500">
-    <a href="#top" class="font-display text-lg font-800 font-bold uppercase tracking-[0.16em]">CV<span class="text-amber">·</span>Classic&nbsp;Cars</a>
-    <nav class="hidden items-center gap-9 text-[12px] uppercase tracking-[0.2em] text-ash md:flex">
+    <a href="#top" class="font-display text-lg font-extrabold uppercase tracking-[0.16em]">CV<span class="text-amber">·</span>Classic&nbsp;Cars</a>
+    <nav class="hidden items-center gap-9 text-[12px] uppercase tracking-[0.2em] text-ash md:flex" aria-label="Primary">
       <a href="#fleet" class="lk transition-colors hover:text-chalk">Fleet</a>
       <a href="#story" class="lk transition-colors hover:text-chalk">Studio</a>
       <a href="#shoots" class="lk transition-colors hover:text-chalk">Work</a>
       <a href="#voices" class="lk transition-colors hover:text-chalk">Reviews</a>
     </nav>
-    <a href="#book" class="rounded-full border border-amber px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] text-amber transition-colors duration-300 hover:bg-amber hover:text-void">Book a car</a>
+    <a href="#book" class="hidden rounded-full border border-amber px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] text-amber transition-colors duration-300 hover:bg-amber hover:text-void md:inline-flex">Book a car</a>
+    <button id="burger" class="burger -mr-1 flex h-11 w-11 flex-col items-center justify-center gap-[5px] md:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="mobnav">
+      <span class="block h-0.5 w-6 bg-chalk"></span>
+      <span class="block h-0.5 w-6 bg-chalk"></span>
+      <span class="block h-0.5 w-6 bg-chalk"></span>
+    </button>
   </div>
 </header>
+
+<!-- Mobile menu -->
+<div id="mobnav" class="closed fixed inset-0 z-40 flex flex-col bg-void px-6 pb-10 pt-24 md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+  <nav class="flex flex-col gap-1 font-display text-4xl font-black uppercase" aria-label="Mobile">
+    <a href="#fleet" class="border-b border-white/10 py-4">Fleet</a>
+    <a href="#story" class="border-b border-white/10 py-4">Studio</a>
+    <a href="#shoots" class="border-b border-white/10 py-4">Work</a>
+    <a href="#voices" class="border-b border-white/10 py-4">Reviews</a>
+  </nav>
+  <a href="#book" class="mt-8 rounded-full bg-amber py-5 text-center text-sm font-bold uppercase tracking-[0.2em] text-void">Book a car</a>
+  <div class="mt-auto flex flex-wrap gap-x-6 gap-y-1 pt-8 text-[11px] uppercase tracking-[0.18em] text-ash">
+    <a href="tel:7602824251" class="py-2">760·282·4251</a>
+    <a href="mailto:contact@cvclassiccars.com" class="py-2">Email</a>
+    <a href="https://www.instagram.com/cvclassiccars" target="_blank" rel="noopener" class="py-2">Instagram</a>
+  </div>
+</div>
 
 <!-- ░░ HERO ░░ -->
 <section id="top" class="relative flex min-h-[100svh] flex-col justify-center px-5 pt-28">
@@ -123,7 +158,7 @@ tailwind.config = {
     <p class="enter d1 mb-8 flex items-center gap-3 text-[12px] uppercase tracking-[0.3em] text-ash">
       <span class="inline-block h-px w-10 bg-amber"></span> Palm Springs · Coachella Valley
     </p>
-    <h1 class="enter d2 display-tight font-display font-900 font-extrabold uppercase" style="font-size:clamp(2.9rem,12vw,9.5rem);">
+    <h1 class="enter d2 display-tight font-display font-black uppercase" style="font-size:clamp(2.9rem,12vw,9.5rem);">
       Restored<br><span class="text-ash">icons,</span><br><span class="text-amber">on call.</span>
     </h1>
     <div class="enter d3 mt-10 grid gap-8 md:grid-cols-12 md:items-end">
@@ -136,13 +171,13 @@ tailwind.config = {
       </div>
     </div>
   </div>
-  <div class="enter d3 absolute inset-x-0 bottom-6 mx-auto flex max-w-6xl items-center justify-between px-5 text-[11px] uppercase tracking-[0.22em] text-ash">
-    <span>06 cars in rotation</span><span class="hidden sm:inline">Driver included · no self-drive</span><span>Scroll ↓</span>
+  <div class="enter d3 absolute inset-x-0 bottom-6 mx-auto hidden max-w-6xl items-center justify-between px-5 text-[11px] uppercase tracking-[0.22em] text-ash sm:flex">
+    <span>06 cars in rotation</span><span>Driver included · no self-drive</span><span>Scroll ↓</span>
   </div>
 </section>
 
 <!-- marquee -->
-<div class="border-y hair bg-panel/40 py-3 overflow-hidden">
+<div class="border-y hair bg-panel/40 py-3 overflow-hidden" aria-hidden="true">
   <div class="marquee flex w-max gap-12 text-[12px] uppercase tracking-[0.3em] text-ash">
     <span>Weddings</span><span class="text-amber">·</span><span>Engagements</span><span class="text-amber">·</span><span>Editorial</span><span class="text-amber">·</span><span>Music Video</span><span class="text-amber">·</span><span>Film &amp; TV</span><span class="text-amber">·</span><span>Corporate Arrivals</span><span class="text-amber">·</span>
     <span>Weddings</span><span class="text-amber">·</span><span>Engagements</span><span class="text-amber">·</span><span>Editorial</span><span class="text-amber">·</span><span>Music Video</span><span class="text-amber">·</span><span>Film &amp; TV</span><span class="text-amber">·</span><span>Corporate Arrivals</span><span class="text-amber">·</span>
@@ -152,7 +187,7 @@ tailwind.config = {
 <!-- ░░ FLEET — spec plates ░░ -->
 <section id="fleet" class="relative mx-auto max-w-6xl px-5 py-20 md:py-32">
   <div class="reveal mb-14 flex flex-wrap items-end justify-between gap-6">
-    <h2 class="display-tight font-display text-5xl font-extrabold uppercase md:text-8xl">The fleet</h2>
+    <h2 class="display-tight font-display text-5xl font-black uppercase md:text-8xl">The fleet</h2>
     <p class="max-w-xs text-sm leading-relaxed text-ash">Six cars, each kept on the road by hand. Flat rates, driver included. Tap any plate for the spec.</p>
   </div>
 
@@ -255,7 +290,7 @@ tailwind.config = {
     </article>
   </div>
 
-  <p class="reveal mt-8 text-[11px] uppercase tracking-[0.16em] text-ash/70">Rate card · $300 first hour · $250 second hour · $1,500 full day (up to 8 hrs) · 3+ hr discounts · varies outside the Coachella Valley</p>
+  <p class="reveal mt-8 text-[11px] uppercase tracking-[0.16em] text-ash">Rate card · $300 first hour · $250 second hour · $1,500 full day (up to 8 hrs) · 3+ hr discounts · varies outside the Coachella Valley</p>
 </section>
 
 <!-- ░░ STORY ░░ -->
@@ -263,7 +298,7 @@ tailwind.config = {
   <div class="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-12 md:py-32">
     <div class="reveal md:col-span-5">
       <p class="text-[12px] uppercase tracking-[0.3em] text-amber">The studio</p>
-      <h2 class="mt-4 display-tight font-display text-5xl font-extrabold uppercase md:text-7xl">Two people.<br>One garage.</h2>
+      <h2 class="mt-4 display-tight font-display text-5xl font-black uppercase md:text-7xl">Two people.<br>One garage.</h2>
       <p class="mt-8 text-[12px] uppercase tracking-[0.2em] text-ash">Joe &amp; Bobbi — Palm Springs</p>
     </div>
     <div class="reveal space-y-6 text-base leading-relaxed text-ash md:col-span-7 md:text-lg">
@@ -277,7 +312,7 @@ tailwind.config = {
 <!-- ░░ WORK / SHOOTS ░░ -->
 <section id="shoots" class="mx-auto max-w-6xl px-5 py-20 md:py-32">
   <div class="reveal mb-12 flex flex-wrap items-end justify-between gap-6">
-    <h2 class="display-tight font-display text-5xl font-extrabold uppercase md:text-8xl">The work</h2>
+    <h2 class="display-tight font-display text-5xl font-black uppercase md:text-8xl">The work</h2>
     <p class="max-w-xs text-sm leading-relaxed text-ash">The frames these cars were built for — desert weddings, engagements, editorial and film.</p>
   </div>
   <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
@@ -312,7 +347,7 @@ tailwind.config = {
 <section id="voices" class="border-y hair bg-panel/30">
   <div class="mx-auto max-w-6xl px-5 py-20 md:py-32">
     <div class="reveal mb-12 flex flex-wrap items-end justify-between gap-6">
-      <h2 class="display-tight font-display text-5xl font-extrabold uppercase md:text-8xl">Reviews</h2>
+      <h2 class="display-tight font-display text-5xl font-black uppercase md:text-8xl">Reviews</h2>
       <span class="text-[12px] uppercase tracking-[0.2em] text-ash"><span class="text-amber">★★★★★</span> 5.0 · 53 Google reviews</span>
     </div>
     <div class="grid gap-4 md:grid-cols-12">
@@ -322,23 +357,23 @@ tailwind.config = {
       </figure>
       <figure class="reveal rounded-2xl border hair bg-panel p-7 md:col-span-5">
         <blockquote class="text-sm leading-relaxed text-ash">“Thank you Joe and Bobbi for making a girl’s dream come true. Riding around Palm Springs in a vintage convertible DeVille is just about the icing on the cake. We were turning heads all over.”</blockquote>
-        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash/70">Evelyn Flores — Google</figcaption>
+        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash">Evelyn Flores — Google</figcaption>
       </figure>
       <figure class="reveal rounded-2xl border hair bg-panel p-7 md:col-span-5">
         <blockquote class="text-sm leading-relaxed text-ash">“The driver was great — he hung out with us the whole time and was professional, helpful, and easy to work with. 10/10 recommend!”</blockquote>
-        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash/70">Kinsey Whidby — Google</figcaption>
+        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash">Kinsey Whidby — Google</figcaption>
       </figure>
       <figure class="reveal rounded-2xl border hair bg-panel p-7 md:col-span-4">
         <blockquote class="text-sm leading-relaxed text-ash">“We used CV Classic Cars for an engagement shoot and the results came out way better than I imagined. Joe was an absolute pleasure — on time, accommodating, quick to respond.”</blockquote>
-        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash/70">Sara Giammanco — Google</figcaption>
+        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash">Sara Giammanco — Google</figcaption>
       </figure>
       <figure class="reveal rounded-2xl border hair bg-panel p-7 md:col-span-4">
         <blockquote class="text-sm leading-relaxed text-ash">“Joe was amazing — patient, flexible, fun, and made our engagement photo dreams a reality. We are so grateful.”</blockquote>
-        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash/70">Sarah Hayden — Google</figcaption>
+        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash">Sarah Hayden — Google</figcaption>
       </figure>
       <figure class="reveal rounded-2xl border hair bg-panel p-7 md:col-span-4">
         <blockquote class="text-sm leading-relaxed text-ash">“The go-to rental if you’re looking for a perfect classic. We rented the Thunderbird and absolutely loved it. Joe was EXTREMELY helpful and accommodating.”</blockquote>
-        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash/70">James Rodriguez — Google</figcaption>
+        <figcaption class="mt-5 text-[10px] uppercase tracking-[0.2em] text-ash">James Rodriguez — Google</figcaption>
       </figure>
     </div>
   </div>
@@ -346,20 +381,20 @@ tailwind.config = {
 
 <!-- ░░ HOW IT WORKS ░░ -->
 <section class="mx-auto max-w-6xl px-5 py-20 md:py-28">
-  <h2 class="reveal display-tight font-display text-5xl font-extrabold uppercase md:text-7xl">How it runs</h2>
+  <h2 class="reveal display-tight font-display text-5xl font-black uppercase md:text-7xl">How it runs</h2>
   <div class="mt-12 grid gap-4 md:grid-cols-3">
     <div class="reveal rounded-2xl border hair bg-panel p-8"><p class="font-display text-4xl font-extrabold text-amber">01</p><h3 class="mt-4 font-display text-xl font-bold uppercase">Choose &amp; book</h3><p class="mt-2 text-sm text-ash">Pick the car and date. Text, call or message — Joe answers fast.</p></div>
     <div class="reveal rounded-2xl border hair bg-panel p-8"><p class="font-display text-4xl font-extrabold text-amber">02</p><h3 class="mt-4 font-display text-xl font-bold uppercase">We deliver</h3><p class="mt-2 text-sm text-ash">A driver brings the car to your location at the set time. The clock starts on arrival.</p></div>
     <div class="reveal rounded-2xl border hair bg-panel p-8"><p class="font-display text-4xl font-extrabold text-amber">03</p><h3 class="mt-4 font-display text-xl font-bold uppercase">Shoot it</h3><p class="mt-2 text-sm text-ash">Driver stays with the car, repositions on demand, allows short drive-by takes for photo &amp; video.</p></div>
   </div>
-  <p class="reveal mt-5 text-[11px] uppercase tracking-[0.16em] text-ash/70">No self-driving · the driver remains with the vehicle throughout the booking</p>
+  <p class="reveal mt-5 text-[11px] uppercase tracking-[0.16em] text-ash">No self-driving · the driver remains with the vehicle throughout the booking</p>
 </section>
 
 <!-- ░░ BOOK ░░ -->
 <section id="book" class="border-t hair">
   <div class="mx-auto max-w-6xl px-5 py-20 md:py-32">
     <p class="reveal text-[12px] uppercase tracking-[0.3em] text-amber">Book a car</p>
-    <h2 class="reveal mt-4 display-tight font-display text-5xl font-extrabold uppercase md:text-8xl">Give us the date.</h2>
+    <h2 class="reveal mt-4 display-tight font-display text-5xl font-black uppercase md:text-8xl">Give us the date.</h2>
     <div class="reveal mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <a href="tel:7602824251" class="rounded-2xl border hair p-7 transition-colors duration-300 hover:border-amber"><p class="text-[10px] uppercase tracking-[0.24em] text-ash">Call</p><p class="mt-2 font-display text-xl font-bold">760·282·4251</p></a>
       <a href="sms:7602824251" class="rounded-2xl border hair p-7 transition-colors duration-300 hover:border-amber"><p class="text-[10px] uppercase tracking-[0.24em] text-ash">Text</p><p class="mt-2 font-display text-xl font-bold">760·282·4251</p></a>
@@ -377,11 +412,11 @@ tailwind.config = {
       <p class="font-display text-2xl font-extrabold uppercase">CV<span class="text-amber">·</span>Classic Cars</p>
       <p class="mt-2 text-sm text-ash">Classic cars for your special moments.</p>
     </div>
-    <div class="flex flex-wrap gap-x-7 gap-y-2 text-[11px] uppercase tracking-[0.2em] text-ash">
-      <a href="https://www.instagram.com/cvclassiccars" target="_blank" rel="noopener" class="lk hover:text-chalk">Instagram</a>
-      <a href="tel:7602824251" class="lk hover:text-chalk">760·282·4251</a>
-      <a href="mailto:contact@cvclassiccars.com" class="lk hover:text-chalk">Email</a>
-      <a href="#top" class="lk hover:text-chalk">Top ↑</a>
+    <div class="flex flex-wrap gap-x-7 gap-y-1 text-[11px] uppercase tracking-[0.2em] text-ash">
+      <a href="https://www.instagram.com/cvclassiccars" target="_blank" rel="noopener" class="lk inline-block py-2 hover:text-chalk">Instagram</a>
+      <a href="tel:7602824251" class="lk inline-block py-2 hover:text-chalk">760·282·4251</a>
+      <a href="mailto:contact@cvclassiccars.com" class="lk inline-block py-2 hover:text-chalk">Email</a>
+      <a href="#top" class="lk inline-block py-2 hover:text-chalk">Top ↑</a>
     </div>
   </div>
   <div class="pointer-events-none select-none px-3 text-center font-display font-extrabold uppercase leading-none"
@@ -408,6 +443,19 @@ tailwind.config = {
     let t = 0;
     setInterval(() => { t += 0.02; kl.style.setProperty('--mx', (50 + Math.sin(t)*26) + '%'); kl.style.setProperty('--my', (40 + Math.cos(t*0.8)*16) + '%'); }, 60);
   }
+
+  // Mobile menu
+  const burger = document.getElementById('burger');
+  const mobnav = document.getElementById('mobnav');
+  const setMenu = (open) => {
+    mobnav.classList.toggle('closed', !open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  burger.addEventListener('click', () => setMenu(mobnav.classList.contains('closed')));
+  mobnav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
 
   // Nav solidify
   const navbar = document.getElementById('navbar');

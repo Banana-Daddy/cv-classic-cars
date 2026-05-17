@@ -49,6 +49,24 @@ Source of truth: **cvclassiccars.com** (+ sub-pages). Secondary: DriveShare host
 
 ---
 
+## 🔧 Audit & optimize pass (2026-05-16, post-delivery)
+
+Full UX/accessibility/craft audit of both directions against the ui-ux-pro-max checklist. Fixed:
+
+- **Mobile navigation added (both)** — the desktop nav was `hidden md:flex` with no fallback, so on <768px Fleet/Story/Shoots/Voices were unreachable (wordmark + CTA only). Added an accessible hamburger → full-screen menu (animated burger↔X, `aria-expanded`/`aria-controls`, Esc-to-close, body-scroll lock, links close on tap). Golden Hour = serif sheet; Studio Noir = black sheet.
+- **Studio Noir display weight (craft)** — `font-900` / `font-800` are not valid Tailwind classes (no-ops); the monumental Archivo hero/headings were silently rendering at 700–800. Switched to `font-black` (900, which was already loaded). Hero + all big section H2s now read at full weight.
+- **Keyboard focus (both)** — no visible focus indicator. Added `:focus-visible` outline (terra on light, amber on dark) with offset.
+- **Contrast (both)** — bumped all sub-4.5:1 faint text: Golden Hour `text-ink/45–55`→`ink2`, `text-bone/45–70`→`/75–80`; Studio Noir `text-ash/70`→`ash`, spec-label `#8A8A86`→`#ABA9A3`.
+- **Anchor offset (both)** — `section[id]{scroll-margin-top:5.5rem}` so jump links don't tuck headings under the fixed nav.
+- **Marquee robustness (Golden Hour)** — replaced the brittle escaped Tailwind-arbitrary reduced-motion selector + in-flow `<style>` with a clean `.mq` class in the head; marquees marked `aria-hidden` (both).
+- **Decorative SVG (Golden Hour)** — hero/story/reserve background `<svg>` marked `aria-hidden="true" focusable="false"`.
+- **Filmstrip touch (Golden Hour)** — drag handler was calling `preventDefault` in `pointermove`, which could block page scroll on touch. Restricted drag to mouse + pointer-capture; touch now uses native overflow scroll.
+- **Placeholder bug (Golden Hour)** — filmstrip image-fail placeholder targeted the `<figure>` (overlaying the caption); now scoped to the image wrapper.
+- **Tap targets (both)** — footer/utility text links given `py-2 inline-block` to clear ~44px; mobile-menu rows are 44px+.
+- **Small-screen polish** — "Shot on location" stamp `hidden sm:block`; Studio Noir hero status bar `hidden sm:flex` (was overlapping copy on short viewports).
+
+Re-verified in preview: desktop + 375px mobile, both mobile menus open/close, no console errors.
+
 ## Not used (deliberately excluded)
 
 - TripAdvisor "Palm Springs Classic cars" listing — **misattributed** (its only review is about Thrifty airport rental). Excluded.

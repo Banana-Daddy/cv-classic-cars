@@ -104,8 +104,27 @@ tailwind.config = {
 
   .stamp{transform:rotate(-7deg);border:2px solid rgba(244,236,224,.5);color:rgba(244,236,224,.7);}
   .hero-tx{text-shadow:0 2px 28px rgba(33,23,18,.5),0 1px 4px rgba(33,23,18,.4);}
+
+  /* Anchored sections clear the fixed nav */
+  section[id]{scroll-margin-top:5.5rem;}
+
+  /* Keyboard focus — visible on the warm canvas */
+  a:focus-visible,button:focus-visible{outline:2px solid #C4602A;outline-offset:3px;border-radius:4px;}
+
+  /* Marquee (clean class — reduced-motion safe) */
+  .mq{animation:mqscroll 38s linear infinite;}
+  @keyframes mqscroll{to{transform:translateX(-50%)}}
+
+  /* Mobile menu */
+  #mobnav{transition:opacity .35s ease, visibility .35s ease;}
+  #mobnav.closed{opacity:0;visibility:hidden;pointer-events:none;}
+  .burger span{transition:transform .3s ease, opacity .2s ease;}
+  .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+
   @media (prefers-reduced-motion: reduce){
-    .kenburns,.grain::after{animation:none!important;}
+    .kenburns,.grain::after,.mq{animation:none!important;}
     .js .reveal,.enter{opacity:1!important;transform:none!important;transition:none!important;animation:none!important;}
     html{scroll-behavior:auto;}
   }
@@ -120,15 +139,36 @@ tailwind.config = {
       <span class="font-display text-2xl font-semibold tracking-tight">Coachella Valley</span>
       <span class="hidden font-mono text-[10px] uppercase tracking-[0.3em] text-terra sm:inline">Classic Cars</span>
     </a>
-    <nav class="hidden items-center gap-9 font-mono text-[11px] uppercase tracking-[0.22em] md:flex">
+    <nav class="hidden items-center gap-9 font-mono text-[11px] uppercase tracking-[0.22em] md:flex" aria-label="Primary">
       <a href="#fleet" class="navlink"><span>The&nbsp;Fleet<br>The&nbsp;Fleet</span></a>
       <a href="#story" class="navlink"><span>The&nbsp;Story<br>The&nbsp;Story</span></a>
       <a href="#shoots" class="navlink"><span>On&nbsp;Set<br>On&nbsp;Set</span></a>
       <a href="#voices" class="navlink"><span>Voices<br>Voices</span></a>
     </nav>
-    <a href="#reserve" class="rounded-full bg-ink px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-bone transition-colors duration-300 hover:bg-terra">Reserve</a>
+    <a href="#reserve" class="hidden rounded-full bg-ink px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-bone transition-colors duration-300 hover:bg-terra md:inline-flex">Reserve</a>
+    <button id="burger" class="burger -mr-1 flex h-11 w-11 flex-col items-center justify-center gap-[5px] md:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="mobnav">
+      <span class="block h-0.5 w-6 bg-ink"></span>
+      <span class="block h-0.5 w-6 bg-ink"></span>
+      <span class="block h-0.5 w-6 bg-ink"></span>
+    </button>
   </div>
 </header>
+
+<!-- Mobile menu -->
+<div id="mobnav" class="closed fixed inset-0 z-40 flex flex-col bg-bone px-6 pb-10 pt-24 md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+  <nav class="flex flex-col gap-1 font-display text-4xl font-semibold" aria-label="Mobile">
+    <a href="#fleet" class="mobitem border-b border-ink/10 py-4">The Fleet</a>
+    <a href="#story" class="mobitem border-b border-ink/10 py-4">The Story</a>
+    <a href="#shoots" class="mobitem border-b border-ink/10 py-4">On Set</a>
+    <a href="#voices" class="mobitem border-b border-ink/10 py-4">Voices</a>
+  </nav>
+  <a href="#reserve" class="mobitem mt-8 rounded-full bg-ink py-5 text-center font-mono text-sm uppercase tracking-[0.2em] text-bone">Reserve a car</a>
+  <div class="mt-auto flex flex-wrap gap-x-6 gap-y-2 pt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-ink2">
+    <a href="tel:7602824251" class="py-1">760·282·4251</a>
+    <a href="mailto:contact@cvclassiccars.com" class="py-1">Email</a>
+    <a href="https://www.instagram.com/cvclassiccars" target="_blank" rel="noopener" class="py-1">Instagram</a>
+  </div>
+</div>
 
 <!-- ░░ HERO ░░ -->
 <section id="top" class="relative flex min-h-[100svh] items-end overflow-hidden">
@@ -136,7 +176,7 @@ tailwind.config = {
   <div class="absolute inset-0 -z-10">
     <div class="absolute inset-0" style="background:linear-gradient(180deg,#F0C97D 0%,#E9A45A 26%,#D97C42 50%,#9C4F33 74%,#3C2017 100%);"></div>
     <div class="kenburns absolute inset-0">
-      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" class="h-full w-full">
+      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" class="h-full w-full" aria-hidden="true" focusable="false">
         <defs>
           <radialGradient id="sun" cx="50%" cy="46%" r="42%">
             <stop offset="0%" stop-color="#FFF4D6"/><stop offset="34%" stop-color="#FFD98A"/>
@@ -191,13 +231,12 @@ tailwind.config = {
       </div>
     </div>
   </div>
-  <span class="stamp absolute right-5 top-28 rounded px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] md:right-10 md:top-32">Shot on location</span>
+  <span class="stamp absolute right-5 top-28 hidden rounded px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] sm:block md:right-10 md:top-32" aria-hidden="true">Shot on location</span>
 </section>
 
 <!-- ░░ MARQUEE STRIP ░░ -->
-<div class="overflow-hidden border-y border-ink/15 bg-bone2 py-3">
-  <div class="flex w-max animate-[scroll_38s_linear_infinite] gap-10 font-mono text-[11px] uppercase tracking-[0.32em] text-ink/55">
-    <style>@keyframes scroll{to{transform:translateX(-50%)}}@media(prefers-reduced-motion:reduce){.animate-\[scroll_38s_linear_infinite\]{animation:none}}</style>
+<div class="overflow-hidden border-y border-ink/15 bg-bone2 py-3" aria-hidden="true">
+  <div class="mq flex w-max gap-10 font-mono text-[11px] uppercase tracking-[0.32em] text-ink2">
     <span>Weddings</span><span class="text-terra">✦</span><span>Engagements</span><span class="text-terra">✦</span><span>Editorial</span><span class="text-terra">✦</span><span>Music Video</span><span class="text-terra">✦</span><span>Film &amp; TV</span><span class="text-terra">✦</span><span>Corporate</span><span class="text-terra">✦</span>
     <span>Weddings</span><span class="text-terra">✦</span><span>Engagements</span><span class="text-terra">✦</span><span>Editorial</span><span class="text-terra">✦</span><span>Music Video</span><span class="text-terra">✦</span><span>Film &amp; TV</span><span class="text-terra">✦</span><span>Corporate</span><span class="text-terra">✦</span>
   </div>
@@ -228,9 +267,9 @@ tailwind.config = {
           <h3 class="mt-2 font-display text-4xl font-semibold leading-none md:text-6xl">1962 Ford Thunderbird</h3>
           <p class="mt-3 max-w-md font-sans text-sm text-bone/75">Corinthian White over a Blood-Red interior. Fewer than ten thousand made — it turns every head it passes.</p>
         </div>
-        <div class="text-right font-mono text-[11px] uppercase tracking-[0.16em] text-bone/70">
-          <p class="text-bone">$300 <span class="text-bone/50">first hr</span></p>
-          <p>$1,500 <span class="text-bone/50">/ day</span></p>
+        <div class="text-right font-mono text-[11px] uppercase tracking-[0.16em] text-bone/80">
+          <p class="text-bone">$300 <span class="text-bone/75">first hr</span></p>
+          <p>$1,500 <span class="text-bone/75">/ day</span></p>
         </div>
       </div>
     </article>
@@ -246,7 +285,7 @@ tailwind.config = {
         <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-terra">02 · The showstopper</p>
         <h3 class="mt-2 font-display text-3xl font-semibold leading-tight">1968 Cadillac<br>DeVille Convertible</h3>
         <p class="mt-3 font-sans text-sm text-ink2">A striking red body over deep red leather. Pure mid-century arrival.</p>
-        <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink/55">$300 first hr · $1,500 / day</p>
+        <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink2">$300 first hr · $1,500 / day</p>
       </div>
     </article>
 
@@ -261,7 +300,7 @@ tailwind.config = {
         <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-terra">03 · The purist</p>
         <h3 class="mt-2 font-display text-3xl font-semibold leading-tight">1959 MG MGA</h3>
         <p class="mt-3 font-sans text-sm text-ink2">Brilliant white over red. A true original — no seatbelts, all soul.</p>
-        <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink/55">$300 first hr · $1,500 / day</p>
+        <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink2">$300 first hr · $1,500 / day</p>
       </div>
     </article>
 
@@ -275,8 +314,8 @@ tailwind.config = {
       <div class="p-6">
         <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-gold">04 · The free spirit</p>
         <h3 class="mt-2 font-display text-3xl font-semibold leading-tight">1967 Volkswagen Bus</h3>
-        <p class="mt-3 font-sans text-sm text-bone/70">German-built, top of the line. Picture-perfect charm for any occasion.</p>
-        <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-bone/45">$300 first hr · $1,500 / day</p>
+        <p class="mt-3 font-sans text-sm text-bone/80">German-built, top of the line. Picture-perfect charm for any occasion.</p>
+        <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-bone/75">$300 first hr · $1,500 / day</p>
       </div>
     </article>
 
@@ -292,7 +331,7 @@ tailwind.config = {
           <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-terra">05 · The newcomer</p>
           <h3 class="mt-2 font-display text-3xl font-semibold leading-tight">2007 Cadillac XLR</h3>
           <p class="mt-3 font-sans text-sm text-ink2">The newest addition — a hardtop convertible making her debut.</p>
-          <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink/55">$300 first hr · $1,500 / day</p>
+          <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink2">$300 first hr · $1,500 / day</p>
         </div>
       </div>
     </article>
@@ -309,19 +348,19 @@ tailwind.config = {
           <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-terra">06 · The modern</p>
           <h3 class="mt-2 font-display text-3xl font-semibold leading-tight">BMW 640i</h3>
           <p class="mt-3 font-sans text-sm text-ink2">Gray over black — sleek lines for engagements and editorial. 20% off December &amp; January.</p>
-          <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink/55">$300 first hr · $1,500 / day</p>
+          <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink2">$300 first hr · $1,500 / day</p>
         </div>
       </div>
     </article>
   </div>
 
-  <p class="reveal mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-ink/45">$300 first hour · $250 second hour · $1,500 full day (up to 8 hrs) · discounts on 3+ hrs · pricing may vary outside the Coachella Valley</p>
+  <p class="reveal mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-ink2">$300 first hour · $250 second hour · $1,500 full day (up to 8 hrs) · discounts on 3+ hrs · pricing may vary outside the Coachella Valley</p>
 </section>
 
 <!-- ░░ STORY ░░ -->
 <section id="story" class="relative overflow-hidden bg-ink text-bone">
   <div class="absolute inset-0 -z-0 opacity-25">
-    <svg viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" class="h-full w-full">
+    <svg viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" class="h-full w-full" aria-hidden="true" focusable="false">
       <path d="M0 470 L260 410 L520 470 L820 396 L1120 466 L1440 408 L1440 600 L0 600Z" fill="#C4602A" opacity="0.4"/>
       <path d="M0 530 L320 478 L640 532 L960 470 L1280 528 L1440 496 L1440 600 L0 600Z" fill="#1F6F6B" opacity="0.35"/>
     </svg>
@@ -332,7 +371,7 @@ tailwind.config = {
       <h2 class="mt-4 font-display text-5xl font-semibold leading-[.95] md:text-7xl">Kept on the road, by hand.</h2>
       <div class="mt-8 flex items-center gap-4">
         <div class="h-px w-12 bg-gold"></div>
-        <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-bone/65">Joe &amp; Bobbi · Palm Springs</p>
+        <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-bone/80">Joe &amp; Bobbi · Palm Springs</p>
       </div>
     </div>
     <div class="reveal space-y-6 font-sans text-base leading-relaxed text-bone/80 md:col-span-7 md:text-lg">
@@ -358,33 +397,33 @@ tailwind.config = {
     <div class="filmstrip flex cursor-grab gap-3 overflow-x-auto py-3 active:cursor-grabbing" id="strip">
       <figure class="relative w-64 shrink-0 overflow-hidden rounded-xl bg-ink2/40 md:w-80">
         <div class="aspect-[4/5]">
-          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2223-2.jpg" alt="Desert engagement frame with a classic car" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.parentElement.classList.add('ph-film')">
+          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2223-2.jpg" alt="Desert engagement frame with a classic car" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.classList.add('ph-film')">
         </div>
-        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/70">Frame 01 · Engagement</figcaption>
+        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/80">Frame 01 · Engagement</figcaption>
       </figure>
       <figure class="relative w-64 shrink-0 overflow-hidden rounded-xl bg-ink2/40 md:w-80">
         <div class="aspect-[4/5]">
-          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2366.jpg" alt="Editorial frame in the Palm Springs light" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.parentElement.classList.add('ph-film')">
+          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2366.jpg" alt="Editorial frame in the Palm Springs light" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.classList.add('ph-film')">
         </div>
-        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/70">Frame 02 · Editorial</figcaption>
+        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/80">Frame 02 · Editorial</figcaption>
       </figure>
       <figure class="relative w-64 shrink-0 overflow-hidden rounded-xl bg-ink2/40 md:w-80">
         <div class="aspect-[4/5]">
-          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2347.jpg" alt="Wedding day frame with a vintage convertible" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.parentElement.classList.add('ph-film')">
+          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2347.jpg" alt="Wedding day frame with a vintage convertible" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.classList.add('ph-film')">
         </div>
-        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/70">Frame 03 · Wedding</figcaption>
+        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/80">Frame 03 · Wedding</figcaption>
       </figure>
       <figure class="relative w-64 shrink-0 overflow-hidden rounded-xl bg-ink2/40 md:w-80">
         <div class="aspect-[4/5]">
-          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2420.jpg" alt="Golden-hour frame in the Coachella Valley" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.parentElement.classList.add('ph-film')">
+          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2420.jpg" alt="Golden-hour frame in the Coachella Valley" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.classList.add('ph-film')">
         </div>
-        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/70">Frame 04 · Golden hour</figcaption>
+        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/80">Frame 04 · Golden hour</figcaption>
       </figure>
       <figure class="relative w-64 shrink-0 overflow-hidden rounded-xl bg-ink2/40 md:w-80">
         <div class="aspect-[4/5]">
-          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2510.jpg" alt="Portrait frame with a classic car" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.parentElement.classList.add('ph-film')">
+          <img src="https://cvclassiccars.com/wp-content/uploads/2021/04/DSC_2510.jpg" alt="Portrait frame with a classic car" loading="lazy" class="h-full w-full object-cover" onerror="this.parentElement.classList.add('ph-film')">
         </div>
-        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/70">Frame 05 · Portrait</figcaption>
+        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-ink to-transparent p-4 font-mono text-[10px] uppercase tracking-[0.2em] text-bone/80">Frame 05 · Portrait</figcaption>
       </figure>
     </div>
     <div class="sprocket h-3 w-full opacity-30"></div>
@@ -414,33 +453,33 @@ tailwind.config = {
       <blockquote class="font-display text-3xl font-medium italic leading-snug md:text-5xl md:leading-[1.12]">
         “Joe was the absolute best to work with… the car we rented for our wedding photo shoot was beyond stunning. I was wearing all white, so it was a concern I didn’t voice — but he took care of it without being asked.”
       </blockquote>
-      <figcaption class="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink2">Lio Botello · <span class="text-ink/50">Google review</span></figcaption>
+      <figcaption class="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink2">Lio Botello · <span class="text-ink2">Google review</span></figcaption>
     </figure>
 
     <div class="reveal mt-14 grid gap-4 md:grid-cols-3">
       <div class="rounded-2xl bg-bone p-6">
         <p class="font-sans text-sm leading-relaxed text-ink2">“We used Coachella Valley Classic Cars for an engagement shoot, and the results came out way better than I could have imagined. Joe was an absolute pleasure to work with — on time, very accommodating, and quick to respond.”</p>
-        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/55">Sara Giammanco · Google</p>
+        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink2">Sara Giammanco · Google</p>
       </div>
       <div class="rounded-2xl bg-bone p-6">
         <p class="font-sans text-sm leading-relaxed text-ink2">“Thank you Joe and Bobbi for making a girl’s dream come true. Riding around Palm Springs in a vintage convertible DeVille is just about the icing on the cake for the rest of my life. We were turning heads all over.”</p>
-        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/55">Evelyn Flores · Google</p>
+        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink2">Evelyn Flores · Google</p>
       </div>
       <div class="rounded-2xl bg-bone p-6">
         <p class="font-sans text-sm leading-relaxed text-ink2">“The driver was great as well — he hung out with us the whole time and was professional, helpful, and easy to work with. 10/10 recommend!”</p>
-        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/55">Kinsey Whidby · Google</p>
+        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink2">Kinsey Whidby · Google</p>
       </div>
       <div class="rounded-2xl bg-bone p-6">
         <p class="font-sans text-sm leading-relaxed text-ink2">“My fiancé and I had a vision to take 60’s-esque themed engagement pictures with a convertible in Palm Springs. Joe was amazing — patient, flexible, fun, and made our engagement photo dreams a reality.”</p>
-        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/55">Sarah Hayden · Google</p>
+        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink2">Sarah Hayden · Google</p>
       </div>
       <div class="rounded-2xl bg-bone p-6">
         <p class="font-sans text-sm leading-relaxed text-ink2">“Joe and his classic cars are a dream come true. As an out-of-state client he answered every question and even helped me decide on a location for my shoot. He genuinely went out of his way for us.”</p>
-        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/55">Priscilla Bell · Google</p>
+        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink2">Priscilla Bell · Google</p>
       </div>
       <div class="rounded-2xl bg-bone p-6">
         <p class="font-sans text-sm leading-relaxed text-ink2">“Coachella Valley Classic Cars is the go-to rental if you’re looking for a perfect classic for a photo shoot. We rented the Thunderbird and absolutely loved it. Joe was EXTREMELY helpful and accommodating.”</p>
-        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/55">James Rodriguez · Google</p>
+        <p class="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink2">James Rodriguez · Google</p>
       </div>
     </div>
   </div>
@@ -454,13 +493,13 @@ tailwind.config = {
     <div class="reveal bg-bone p-8"><p class="font-mono text-xs text-terra">02</p><h3 class="mt-3 font-display text-2xl font-semibold">We deliver it</h3><p class="mt-2 font-sans text-sm text-ink2">A driver brings the car to your location at the set time. The clock starts on arrival.</p></div>
     <div class="reveal bg-bone p-8"><p class="font-mono text-xs text-terra">03</p><h3 class="mt-3 font-display text-2xl font-semibold">Shoot it</h3><p class="mt-2 font-sans text-sm text-ink2">The driver stays with the car, repositions as needed, and allows short drive-by takes for photo &amp; video.</p></div>
   </div>
-  <p class="reveal mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink/45">Classic cars are not rented for self-driving · the driver remains with the vehicle throughout</p>
+  <p class="reveal mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink2">Classic cars are not rented for self-driving · the driver remains with the vehicle throughout</p>
 </section>
 
 <!-- ░░ RESERVE / CONTACT ░░ -->
 <section id="reserve" class="relative overflow-hidden bg-ink text-bone">
   <div class="absolute inset-0 -z-0 opacity-30">
-    <svg viewBox="0 0 1440 520" preserveAspectRatio="xMidYMid slice" class="h-full w-full">
+    <svg viewBox="0 0 1440 520" preserveAspectRatio="xMidYMid slice" class="h-full w-full" aria-hidden="true" focusable="false">
       <circle cx="1180" cy="120" r="220" fill="#C4602A" opacity="0.35"/>
       <path d="M0 420 L300 360 L640 420 L980 350 L1280 414 L1440 380 L1440 520 L0 520Z" fill="#1F6F6B" opacity="0.3"/>
     </svg>
@@ -470,23 +509,23 @@ tailwind.config = {
     <h2 class="reveal mt-4 max-w-3xl font-display text-5xl font-semibold leading-[.95] md:text-8xl">Tell us the date.<br>We’ll bring the icon.</h2>
     <div class="reveal mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <a href="tel:7602824251" class="group rounded-2xl border border-bone/20 p-6 transition-colors duration-300 hover:bg-bone/5">
-        <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-bone/55">Call</p>
+        <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-bone/75">Call</p>
         <p class="mt-2 font-display text-2xl font-semibold">760·282·4251</p>
       </a>
       <a href="sms:7602824251" class="group rounded-2xl border border-bone/20 p-6 transition-colors duration-300 hover:bg-bone/5">
-        <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-bone/55">Text</p>
+        <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-bone/75">Text</p>
         <p class="mt-2 font-display text-2xl font-semibold">760·282·4251</p>
       </a>
       <a href="mailto:contact@cvclassiccars.com" class="group rounded-2xl border border-bone/20 p-6 transition-colors duration-300 hover:bg-bone/5">
-        <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-bone/55">Email</p>
+        <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-bone/75">Email</p>
         <p class="mt-2 font-display text-xl font-semibold break-all">contact@cvclassiccars.com</p>
       </a>
       <a href="https://wa.link/a95jyf" target="_blank" rel="noopener" class="group rounded-2xl border border-bone/20 p-6 transition-colors duration-300 hover:bg-bone/5">
-        <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-bone/55">WhatsApp</p>
+        <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-bone/75">WhatsApp</p>
         <p class="mt-2 font-display text-2xl font-semibold">Message us ↗</p>
       </a>
     </div>
-    <p class="reveal mt-10 max-w-xl font-sans text-sm leading-relaxed text-bone/60">Serving Palm Springs, the Coachella Valley, Joshua Tree, Twentynine Palms &amp; Yucca Valley. Pricing may vary for areas outside the Coachella Valley.</p>
+    <p class="reveal mt-10 max-w-xl font-sans text-sm leading-relaxed text-bone/80">Serving Palm Springs, the Coachella Valley, Joshua Tree, Twentynine Palms &amp; Yucca Valley. Pricing may vary for areas outside the Coachella Valley.</p>
   </div>
 </section>
 
@@ -497,11 +536,11 @@ tailwind.config = {
       <p class="font-display text-3xl font-semibold">Coachella Valley Classic Cars</p>
       <p class="mt-2 font-sans text-sm text-ink2">Classic cars for your special moments.</p>
     </div>
-    <div class="flex flex-wrap gap-x-8 gap-y-2 font-mono text-[11px] uppercase tracking-[0.2em] text-ink2">
-      <a href="https://www.instagram.com/cvclassiccars" target="_blank" rel="noopener" class="uline">Instagram</a>
-      <a href="tel:7602824251" class="uline">760·282·4251</a>
-      <a href="mailto:contact@cvclassiccars.com" class="uline">Email</a>
-      <a href="#top" class="uline">Back to top</a>
+    <div class="flex flex-wrap gap-x-8 gap-y-1 font-mono text-[11px] uppercase tracking-[0.2em] text-ink2">
+      <a href="https://www.instagram.com/cvclassiccars" target="_blank" rel="noopener" class="uline inline-block py-2">Instagram</a>
+      <a href="tel:7602824251" class="uline inline-block py-2">760·282·4251</a>
+      <a href="mailto:contact@cvclassiccars.com" class="uline inline-block py-2">Email</a>
+      <a href="#top" class="uline inline-block py-2">Back to top</a>
     </div>
   </div>
   <div class="pointer-events-none select-none px-3 text-center font-display font-semibold leading-none tracking-tight text-transparent"
@@ -539,17 +578,30 @@ tailwind.config = {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
   }
 
-  // Filmstrip drag-to-scroll
+  // Mobile menu
+  const burger = document.getElementById('burger');
+  const mobnav = document.getElementById('mobnav');
+  const setMenu = (open) => {
+    mobnav.classList.toggle('closed', !open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  burger.addEventListener('click', () => setMenu(mobnav.classList.contains('closed')));
+  mobnav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+
+  // Filmstrip drag-to-scroll — mouse only (touch uses native overflow scroll)
   const strip = document.getElementById('strip');
   let down=false,startX,scroll;
-  strip.addEventListener('pointerdown', e => { down=true; startX=e.pageX; scroll=strip.scrollLeft; });
-  window.addEventListener('pointerup', () => down=false);
-  strip.addEventListener('pointermove', e => { if(!down) return; e.preventDefault(); strip.scrollLeft = scroll - (e.pageX - startX)*1.4; });
+  strip.addEventListener('pointerdown', e => { if(e.pointerType!=='mouse') return; down=true; startX=e.pageX; scroll=strip.scrollLeft; strip.setPointerCapture(e.pointerId); });
+  strip.addEventListener('pointerup', () => down=false);
+  strip.addEventListener('pointermove', e => { if(!down||e.pointerType!=='mouse') return; strip.scrollLeft = scroll - (e.pageX - startX)*1.4; });
 </script>
 <style>
   .ph::after,.ph-d::after,.ph-film::after{content:"Coachella Valley Classic Cars";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;}
-  .ph{background:linear-gradient(135deg,#EADFCC,#D9C3A6);} .ph::after{color:#211712;opacity:.4;}
-  .ph-d,.ph-film{background:linear-gradient(135deg,#2A1A12,#1F6F6B);} .ph-d::after,.ph-film::after{color:#F4ECE0;opacity:.5;}
+  .ph{position:relative;background:linear-gradient(135deg,#EADFCC,#D9C3A6);} .ph::after{color:#211712;opacity:.4;}
+  .ph-d,.ph-film{position:relative;background:linear-gradient(135deg,#2A1A12,#1F6F6B);} .ph-d::after,.ph-film::after{color:#F4ECE0;opacity:.5;}
 </style>
 </body>
 </html>
